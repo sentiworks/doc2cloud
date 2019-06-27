@@ -1,30 +1,42 @@
 import React from 'react';
 import './App.css';
+import Login from './components/Login';
+import Widget from './components/Widget';
 
-function App() {
-  // use Cloudinary Upload Widget directly
-  const widget = window.cloudinary.createUploadWidget({
-    cloudName: `${process.env.REACT_APP_CLOUD_NAME}`,
-    uploadPreset: `${process.env.REACT_APP_UPLOAD_PRESET}`
- }, (error, result) => {
-    if (!error && result && result.event === "success") {
-      console.log('Done! Here is the link: ', result.info.secure_url);
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isAuthenticated: false,
+      widget: null,
     }
-  });
-
-  function openWidget() {
-    widget.open();
+    this.handleLoginStatus = this.handleLoginStatus.bind(this);
+    this.handleWidgetStatus = this.handleWidgetStatus.bind(this);
   }
 
-  return (
-    <div className="App">
-      <label>Use Cloudinary Upload Widget
-        <br></br>
-      </label>
-      <br></br>
-      <button onClick={openWidget}>Upload Docs</button>
-    </div>
-  );
+  handleLoginStatus() {
+    this.setState({isAuthenticated: true});
+  }
+
+  handleWidgetStatus(widget) {
+    this.setState({widget: widget});
+  }
+
+  render() {
+    const options = {
+      isAuthenticated: this.state.isAuthenticated,
+      onSubmitStatus: this.handleLoginStatus,
+      widget: this.state.widget,
+      onWidgetStatus: this.handleWidgetStatus
+    }
+    return (
+      <div className="App">
+        <label>Use Cloudinary Upload Widget to store images in Cloud</label>
+        <Login options={options} />
+        <Widget options={options} />
+      </div>
+    );
+  };
 }
 
 export default App;
