@@ -1,40 +1,44 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Security, SecureRoute, ImplicitCallback } from '@okta/okta-react';
 import './App.css';
+import Home from './components/Home';
 import Login from './components/Login';
-import Widget from './components/Widget';
+import UploadWidget from './components/UploadWidget';
+import NotFound from './components/NotFound';
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isAuthenticated: false,
-      widget: null,
-    }
-    this.handleLoginStatus = this.handleLoginStatus.bind(this);
-    this.handleWidgetStatus = this.handleWidgetStatus.bind(this);
-  }
 
-  handleLoginStatus() {
-    this.setState({isAuthenticated: true});
+  handleAuthRequired = ({history}) => {
+    history.push('/login');
   }
-
-  handleWidgetStatus(widget) {
-    this.setState({widget: widget});
+    
+  renderLogin = () => {
+    return (
+      <Login baseUrl={`${process.env.REACT_APP_OKTA_BASEURL}`} />
+    )
   }
 
   render() {
-    const options = {
-      isAuthenticated: this.state.isAuthenticated,
-      onSubmitStatus: this.handleLoginStatus,
-      widget: this.state.widget,
-      onWidgetStatus: this.handleWidgetStatus
-    }
     return (
-      <div className="App">
-        <label>Use Cloudinary Upload Widget to store images in Cloud</label>
-        <Login options={options} />
-        <Widget options={options} />
-      </div>
+      <Router>
+        <Security
+          issuer={process.env.REACT_APP_OKTA_BASEURL + '/oauth2/default'}
+          client_id={process.env.REACT_APP_OKTA_CLIENTID}
+          redirect_uri={window.location.origin + '/implicit/callback'}
+          onAuthRequired={this.handleAuthRequired}
+        >
+          <div className="App">
+            <Switch>
+              <Route path="/" exact component={Home} />
+              <SecureRoute path="/upload" exact component={UploadWidget} />
+              <Route path="/login" exact render={this.renderLogin} />
+              <Route path="/implicit/callback" exact component={ImplicitCallback} />
+              <Route component={NotFound} />
+            </Switch>
+          </div>
+        </Security>
+      </Router>
     );
   };
 }
