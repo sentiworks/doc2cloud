@@ -12,8 +12,8 @@ class Home extends Component {
 
   checkAuthentication = async () => {
     const authenticated = await this.props.auth.isAuthenticated();
+    console.log("home authenticated: ", authenticated);
     if (authenticated !== this.state.authenticated) {
-      console.log("home authenticated: ", authenticated);
       this.setState({authenticated});
     }
   }
