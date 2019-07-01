@@ -25,7 +25,7 @@ class App extends React.Component {
         <Security
           issuer={process.env.REACT_APP_OKTA_BASEURL + '/oauth2/default'}
           client_id={process.env.REACT_APP_OKTA_CLIENTID}
-          redirect_uri={process.env.REACT_APP_OKTA_REDIRECTURI}
+          redirect_uri={window.location.origin + '/implicit/callback'}
           onAuthRequired={this.handleAuthRequired}
         >
           <div className="App">

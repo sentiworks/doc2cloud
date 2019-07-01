@@ -22,32 +22,24 @@ class Login extends Component {
     }
   }
 
-  componentDidUpdate() {
-    console.log("login updated");
+  async componentDidUpdate() {
     this.checkAuthentication();
   }
 
   handleSuccess = (res) => {
     if (res.status === 'SUCCESS') {
-      console.log("user: ", res.user);
-      if (res.type === 'SESSION_STEP_UP') {
-        res.stepUp.finish();
-      } 
-      console.log("claims: ", res.claims);
-      console.log("login success: ", res.session.token);
       return this.props.auth.redirect({
         sessionToken: res.session.token
       });
-      //return;
     } else {
-      console.log("login unsuccess: ", this)
-      // other states
+      console.log("unsuccessful login: ");
+      console.log("type: ", res.type);
+      console.log("user: ", res.user);
     }
   }
 
   handleError = (err) => {
-    console.log("login Error: ", err);
-    var errorEl = document.createElement('div');
+    const errorEl = document.createElement('div');
     errorEl.textContent = 'Error! ' + err.message;
     document.body.insertBefore(
       errorEl,
@@ -57,7 +49,6 @@ class Login extends Component {
 
   render() {
     if (this.state.authenticated === null) {
-      console.log("login rendering under no authentication");
       return null;
     }
     return (
