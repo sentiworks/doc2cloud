@@ -35,13 +35,10 @@ class Login extends Component {
       } 
       console.log("claims: ", res.claims);
       console.log("login success: ", res.session.token);
-      res.session.setCookieAndRedirect(process.env.REACT_APP_OKTA_REDIRECTURI);
-      /*
-      this.props.auth.redirect({
+      return this.props.auth.redirect({
         sessionToken: res.session.token
       });
-      */
-      return;
+      //return;
     } else {
       console.log("login unsuccess: ", this)
       // other states

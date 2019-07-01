@@ -10,13 +10,16 @@ class UploadWidget extends React.Component {
     }, (error, result) => {
       if (!error && result && result.event === "success") {
         console.log('Done! Here is the link: ', result.info.secure_url);
+      } else if (result.event === "abort") {
+        const {history} = this.props;
+        history.push('/');
       }
     });
     this.widget.open();
   }
 
   componentWillUnmount() {
-    this.props.history.push('/');
+    this.widget.close()
   }
 
   render() {
