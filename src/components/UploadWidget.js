@@ -1,20 +1,26 @@
 import React from 'react';
 
+const TAG = process.env.REACT_APP_UPLOAD_PRESET;
+
 class UploadWidget extends React.Component {
 
   componentDidMount() {
     // use Cloudinary Upload Widget directly
-    this.widget = window.cloudinary.createUploadWidget({
+    const options = {
       cloudName: process.env.REACT_APP_CLOUD_NAME,
-      uploadPreset: process.env.REACT_APP_UPLOAD_PRESET
-    }, (error, result) => {
-      if (!error && result && result.event === "success") {
-        console.log('Done! Here is the link: ', result.info.secure_url);
-      } else if (result.event === "abort") {
-        const {history} = this.props;
-        history.push('/');
+      uploadPreset: process.env.REACT_APP_UPLOAD_PRESET,
+      tags: [TAG]
+    }
+    this.widget = window.cloudinary.createUploadWidget(options, 
+      (error, result) => {
+        if (!error && result && result.event === "success") {
+          console.log('Done! Here is the link: ', result.info.secure_url);
+        } else if (result.event === "abort") {
+          const {history} = this.props;
+          history.push('/dashboard');
+        }
       }
-    });
+    );
     this.widget.open();
   }
 

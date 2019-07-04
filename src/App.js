@@ -6,6 +6,7 @@ import Home from './components/Home';
 import Login from './components/Login';
 import UploadWidget from './components/UploadWidget';
 import NotFound from './components/NotFound';
+import Dashboard from './components/Dashboard';
 
 class App extends React.Component {
 
@@ -32,6 +33,7 @@ class App extends React.Component {
             <Switch>
               <Route path="/" exact component={Home} />
               <SecureRoute path="/upload" exact component={UploadWidget} />
+              <SecureRoute path="/dashboard" exact component={Dashboard} />
               <Route path="/login" exact render={this.renderLogin} />
               <Route path="/implicit/callback" exact component={ImplicitCallback} />
               <Route component={NotFound} />
